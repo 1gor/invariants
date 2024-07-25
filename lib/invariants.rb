@@ -40,8 +40,10 @@ module Invariants
   # @param payload [Object] the payload to pass to the invariant blocks
   # @param names [Array<Symbol>] the names of the invariants to validate
   def enforce_invariants(payload, *names)
-    self.class.invariants.each do |name, block|
-      instance_exec(payload, &block) if names.include?(name)
+    names.each do |name|
+      if self.class.invariants.key?(name)
+        instance_exec(payload, &self.class.invariants[name])
+      end
     end
   end
 end
